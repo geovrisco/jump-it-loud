@@ -1,0 +1,9 @@
+On iOS you need to add a usage description to Info.plist:
+
+  <key>NSMicrophoneUsageDescription</key>
+  <string>This sample uses the microphone to analyze sound level.</string>
+
+
+On Android you need to add a permission to AndroidManifest.xml:
+
+  <uses-permission android:name="android.permission.RECORD_AUDIO" />
