@@ -37,7 +37,7 @@ export default class App extends Component {
     let world = engine.world;
     // console.log(world)
     let character = Matter.Bodies.rectangle(Constants.MAX_WIDTH / 4, Constants.MAX_HEIGHT-100, 50,50)
-    let floor  = Matter.Bodies.rectangle(Constants.MAX_WIDTH/2, Constants.MAX_HEIGHT - 90, Constants.MAX_WIDTH,50, {isStatic:true})
+    let floor  = Matter.Bodies.rectangle(Constants.MAX_WIDTH/2, Constants.MAX_HEIGHT - 50, Constants.MAX_WIDTH,50, {isStatic:true})
     Matter.World.add(world, [character,floor]) 
 
     return{
