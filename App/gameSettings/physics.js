@@ -7,7 +7,7 @@ const physics = (entities, {touches, time }) =>{
   let RNSoundLevel = entities.physics.RNSoundLevel
 
   RNSoundLevel.onNewFrame = (data) => {
-    console.log(data)
+    // console.log(data)
     if(character.position.y > Constants.MAX_HEIGHT - 100) {
       if(data.value > -20 && data.value <= -10){
         Matter.Body.setVelocity(character, {x: character.velocity.x , y: -10})
