@@ -8,7 +8,11 @@ import * as Permissions from 'expo-permissions'
 import Character from './components/character'
 import Physics from './gameSettings/physics'
 import Floor from './components/floor'
+// import Obstacle from './components/obstacle'
 
+// const randomHeight = (min, max) => {
+//   return Math.floor(Math.random() * (max - min + 1) + min)
+// }
 
 export default class App extends Component {
   constructor(props){
@@ -38,12 +42,17 @@ export default class App extends Component {
     // console.log(world)
     let character = Matter.Bodies.rectangle(Constants.MAX_WIDTH / 4, Constants.MAX_HEIGHT-100, 50,50)
     let floor  = Matter.Bodies.rectangle(Constants.MAX_WIDTH/2, Constants.MAX_HEIGHT - 50, Constants.MAX_WIDTH,50, {isStatic:true})
-    Matter.World.add(world, [character,floor]) 
+    // let obstacle1 = Matter.Bodies.rectangle(Constants.MAX_WIDTH - (Constants.OBSTACLE_WIDTH/2), Constants.MAX_HEIGHT - 100, Constants.OBSTACLE_WIDTH, 100, {isStatic: true})
+    // let obstacle2 = Matter.Bodies.rectangle(Constants.MAX_WIDTH * 2 - (Constants.OBSTACLE_WIDTH/2), Constants.MAX_HEIGHT - 100, Constants.OBSTACLE_WIDTH, 100, {isStatic: true})
+
+    Matter.World.add(world, [character,floor])
 
     return{
       physics: {engine, world, RNSoundLevel},
       character: {body:character, size:[50,50], color:"blue", renderer: Character},
-      floor: {body:floor, size:[Constants.MAX_WIDTH,50], color:"red", renderer: Floor}
+      floor: {body:floor, size:[Constants.MAX_WIDTH,50], color:"red", renderer: Floor},
+      // obstacle1: {body: obstacle1, size:[Constants.OBSTACLE_WIDTH, randomHeight(200, 500)], color:"red", renderer: Obstacle},
+      // obstacle2: {body: obstacle2, size:[Constants.OBSTACLE_WIDTH, randomHeight(200, 500)], color:"red", renderer: Obstacle}
     }
   }
 
