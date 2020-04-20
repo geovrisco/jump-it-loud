@@ -11,12 +11,12 @@ const randomHeight = (min, max) => {
 }
 
 const obstacleGenerator = (x, world, entities) => {
-  let obstacleHeight1 = randomHeight(150, 500)
+  let obstacleHeight1 = randomHeight(50, 300)
 
 
   let obstacle1 = Matter.Bodies.rectangle(
       x, 
-      Constants.MAX_HEIGHT - 100, 
+      Constants.MAX_HEIGHT - 75 - (obstacleHeight1/2), 
       Constants.OBSTACLE_WIDTH, 
       obstacleHeight1, 
       {isStatic: true}
@@ -27,7 +27,6 @@ const obstacleGenerator = (x, world, entities) => {
   entities["obstacle"] = {
     body: obstacle1,
     size:[Constants.OBSTACLE_WIDTH, obstacleHeight1],
-    color: "red",
     renderer: Obstacle
   }
   generate = true
