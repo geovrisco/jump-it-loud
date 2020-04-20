@@ -1,17 +1,17 @@
 import React,{Component} from 'react';
-import { StyleSheet, Text, View, StatusBar,TouchableOpacity ,Button, Image} from 'react-native';
+import { StyleSheet, Text, View, StatusBar,TouchableOpacity ,Button, Image, KeyboardAvoidingView, Platform} from 'react-native';
 import RNSoundLevel from 'react-native-sound-level'
 import Constants from './gameSettings/constants'
 import {GameEngine} from 'react-native-game-engine'
 import Matter from 'matter-js'
 import * as Permissions from 'expo-permissions'
 import Character from './components/character'
-import Physics from './gameSettings/physics'
+import Physics, {
+  resetObstacles
+} from './gameSettings/physics'
 import Floor from './components/floor'
 import Background from './assets/background.png'
-import Obstacle from './components/obstacle';
-
-
+import HomeDiv from './pages/home'
 
 
 export default class App extends Component {
@@ -21,8 +21,10 @@ export default class App extends Component {
     this.entities = this.setupWorld()
     this.state = {
       isRunning:false,
-      score:0
+      score:0,
+      gamePlayed: false
     }
+    this.startGame=this.startGame.bind(this)
   }
 
   async getPermission(){
@@ -42,10 +44,10 @@ export default class App extends Component {
     let engine = Matter.Engine.create({ enableSleeping:false})
     let world = engine.world;
     // console.log(world)
-    let character = Matter.Bodies.rectangle(Constants.MAX_WIDTH / 4, Constants.MAX_HEIGHT-200, 50,50,{label:'character'})
+
+    let character = Matter.Bodies.rectangle(Constants.MAX_WIDTH / 4, Constants.MAX_HEIGHT-102, 50,50,{label:'character'})
     let floor  = Matter.Bodies.rectangle(Constants.MAX_WIDTH/2, Constants.MAX_HEIGHT - 50, Constants.MAX_WIDTH,50, {isStatic:true, label:'floor'})
-    let obstacle = Matter.Bodies.rectangle(Constants.MAX_WIDTH / 4, Constants.MAX_HEIGHT-102, 30,30, {label:"obstacle"})
-    Matter.World.add(world, [character,floor,obstacle]) 
+    Matter.World.add(world, [character,floor]) 
 
     Matter.Events.on(engine,"collisionStart", event => {
       // console.log(event)
@@ -67,13 +69,22 @@ export default class App extends Component {
       physics: {engine, world, RNSoundLevel},
       character: {body:character, size:[50,50], color:"blue", renderer: Character},
       floor: {body:floor, size:[Constants.MAX_WIDTH,50], color:"red", renderer: Floor},
-      obstacle : {body:obstacle, size:[30,30], color:"red", renderer: Obstacle},
+
     }
 
 
   }
 
-  
+  restartGame(){
+    RNSoundLevel.start()
+    
+    this.setState({
+      isRunning:true,
+      score:0
+    })
+    resetObstacles()
+    this.gameEngine.swap(this.setupWorld())
+  }
 
   componentWillUnmount(){
     RNSoundLevel.stop()
@@ -84,37 +95,42 @@ export default class App extends Component {
     RNSoundLevel.start()
     this.getPermission()
     console.log('mulai=============================')
-    this.setState({
-      isRunning:true
-    })
+    // this.setState({
+    //   isRunning:true
+    // })
     }
+  startGame(){
+    this.setState({
+      isRunning: true,
+      gamePlayed: true,
+    })
+  }
 
   onEvent = (e) =>{
-    console.log(e)
+    // console.log(e)
     
 
     if(e.type==='score'){
       this.setState({
         score:this.state.score+1
       })
-      console.log(this.state.score)
+      // console.log(this.state.score)
     }
     if(e.type==='gameOver'){
       console.log('gameOver')
       this.setState({
         isRunning:false
       })
-      alert('game over dong coy')
+      RNSoundLevel.stop()
     }
 
   }
 
   render(){
     return(
-      <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS == "ios"? "padding" : "height"}>
         <Image source={Background} style={styles.background} resizeMode="stretch">
-        </Image>
-          
+        </Image>  
         <GameEngine
           ref={(ref) => { this.gameEngine = ref}}
           style={styles.gameContainer}
@@ -126,7 +142,19 @@ export default class App extends Component {
         <View style={{position:"absolute", top:30,left:30,bottom:0,right:0,flex:1}}>
         <Text>{this.state.score}</Text>
         </View>
-      </View>
+        {
+          !this.state.isRunning && !this.state.gamePlayed &&
+          <View style={styles.container}>
+            <HomeDiv startGame={this.startGame}></HomeDiv>
+          </View>
+        }
+        {
+          !this.state.isRunning && this.state.gamePlayed && 
+          <View style={styles.container}>
+          <Button style={{width:100}} onPress={()=> this.restartGame()} title="restart"></Button>
+          </View>
+        }
+      </KeyboardAvoidingView>
     )
   }
 }
@@ -134,7 +162,6 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   background:{
     position:"absolute",
@@ -144,5 +171,8 @@ const styles = StyleSheet.create({
     bottom:0,
     width:Constants.MAX_WIDTH,
     height:Constants.MAX_HEIGHT,
-  }
+  },
+  container2: {
+    position:"absolute",
+  },
 });

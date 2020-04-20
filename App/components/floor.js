@@ -33,6 +33,4 @@ export default class Floor extends Component{
       </View>
     )
   }
-
-
 }
