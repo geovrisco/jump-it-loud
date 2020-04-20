@@ -12,6 +12,7 @@ import Physics, {
 import Floor from './components/floor'
 import Background from './assets/background.png'
 import HomeDiv from './pages/home'
+import PauseButton from './assets/pause.png'
 
 
 export default class App extends Component {
@@ -22,7 +23,10 @@ export default class App extends Component {
     this.state = {
       isRunning:false,
       score:0,
-      gamePlayed: false
+      gamePlayed: false,
+      isPause:false,
+      gameDone:false,
+      pauseShow:false
     }
     this.startGame=this.startGame.bind(this)
   }
@@ -69,7 +73,6 @@ export default class App extends Component {
       physics: {engine, world, RNSoundLevel},
       character: {body:character, size:[50,50], pose:1, renderer: Character},
       floor: {body:floor, size:[Constants.MAX_WIDTH,50], color:"red", renderer: Floor},
-
     }
 
 
@@ -80,7 +83,8 @@ export default class App extends Component {
     
     this.setState({
       isRunning:true,
-      score:0
+      score:0,
+      gameDone:false
     })
     resetObstacles()
     this.gameEngine.swap(this.setupWorld())
@@ -108,8 +112,6 @@ export default class App extends Component {
 
   onEvent = (e) =>{
     // console.log(e)
-    
-
     if(e.type==='score'){
       this.setState({
         score:this.state.score+1
@@ -117,14 +119,27 @@ export default class App extends Component {
       // console.log(this.state.score)
     }
     if(e.type==='gameOver'){
-      console.log('gameOver')
-      this.setState({
-        isRunning:false
+      console.log('gameOver',this.state.isPause,this.state.gameDone)
+      this.setState({ 
+        isRunning:false,
+        gameDone:true,
+        gamePlayed: false  
       })
       RNSoundLevel.stop()
     }
-
+ 
   }
+
+  pause(){
+    if(this.state.gameDone)
+      return;
+
+    console.log('Pause clicked',this.state.isPause,this.state.gameDone)
+    this.setState({
+      isPause:!this.state.isPause,
+      isRunning:!this.state.isRunning
+    })
+  } 
 
   render(){
     return(
@@ -138,9 +153,16 @@ export default class App extends Component {
           entities= {this.entities}
           running={this.state.isRunning}
           onEvent={this.onEvent}
-        />
-        <View style={{position:"absolute", top:30,left:30,bottom:0,right:0,flex:1}}>
-        <Text>{this.state.score}</Text>
+        /> 
+        <View style={{position:"absolute", top:30,left:30,bottom:0,right:0,flex:1,flexDirection:'row', justifyContent:'space-between'}}>
+          <Text style={styles.scoreText}>{this.state.score}</Text>
+          {
+            (!this.state.isPause) &&  
+          <TouchableOpacity  onPress={()=>this.pause()}>
+            <Image source={PauseButton} style={styles.pauseBtn} />
+          </TouchableOpacity>
+          }
+         
         </View>
         {
           !this.state.isRunning && !this.state.gamePlayed &&
@@ -149,9 +171,19 @@ export default class App extends Component {
           </View>
         }
         {
-          !this.state.isRunning && this.state.gamePlayed && 
+           this.state.gameDone && 
           <View style={styles.container}>
           <Button style={{width:100}} onPress={()=> this.restartGame()} title="restart"></Button>
+          </View>
+        }
+        { 
+           (this.state.isPause) &&
+          <View style={styles.pauseScreen}>
+            <View style={styles.pauseScreenContent}>
+              <Button title="continue" onPress={()=>this.pause()}/>
+              <View style={{height:10}}/>
+              <Button title="Back To Menu" color="red"/>
+            </View>
           </View>
         }
       </KeyboardAvoidingView>
@@ -175,4 +207,31 @@ const styles = StyleSheet.create({
   container2: {
     position:"absolute",
   },
+  pauseBtn:{
+    width:50,
+    height:50,
+    marginRight:20
+  },
+  scoreText:{
+    fontSize:30
+  },
+  pauseScreen:{
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0, 
+    right: 0,
+    flex: 1,
+  },
+  pauseScreenContent:{
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'black',
+    opacity: 0.8,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });

@@ -12,6 +12,7 @@ export default class Character extends Component{
     const y = this.props.body.position.y - height /2 ;
 
     let image = Images['fox' + this.props.pose]
+    console.log('Characters',{x,y,width,height})
     return (
       <Image style={
         {
