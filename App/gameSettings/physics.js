@@ -6,6 +6,8 @@ let obstacles = 0
 let generate = false
 let isOffScreen = false
 let currentObstacle=null
+let thick = 0
+let pose = 1
 
 const randomHeight = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min)
@@ -41,6 +43,7 @@ export const resetObstacles = () =>{
   console.log('kepanggil')
   obstacles = 0
   generate=false
+  thick = 0
   console.log(obstacles,'ini obstacle')
 }
 
@@ -50,6 +53,18 @@ const physics = (entities, {dispatch, time }) =>{
   let RNSoundLevel = entities.physics.RNSoundLevel
   let world = entities.physics.world
 
+  thick +=1 ;
+  if (thick % 5 === 0){
+    pose = pose + 1 
+    if(pose>2){
+      pose = 1
+    }
+    entities.character.pose = pose
+    
+  }
+  if(character.position.y < Constants.MAX_HEIGHT -100){
+    entities.character.pose=2
+  }
   RNSoundLevel.onNewFrame = (data) => {
     // console.log(data)
     if(character.position.y > Constants.MAX_HEIGHT - 100) {
@@ -58,10 +73,10 @@ const physics = (entities, {dispatch, time }) =>{
         Matter.Body.setVelocity(character, {x: character.velocity.x , y: -20})
       }else if (data.value > -15 && data.value <= -5){
         console.log(data, 'masuk -35')
-        Matter.Body.setVelocity(character, {x: character.velocity.x , y: -30})
+        Matter.Body.setVelocity(character, {x: character.velocity.x , y: -25})
       }else if (data.value > -5){
         console.log(data, 'masuk 50')
-        Matter.Body.setVelocity(character, {x: character.velocity.x , y: -35})
+        Matter.Body.setVelocity(character, {x: character.velocity.x , y: -30})
       }
     }
   }
@@ -79,7 +94,11 @@ const physics = (entities, {dispatch, time }) =>{
   Object.keys(entities).forEach(key => {
     
     if(key.indexOf("obstacle") === 0){
-      Matter.Body.translate(entities[key].body, {x: -7, y: 0})
+      if(thick >= 0 && thick < 300){
+        Matter.Body.translate(entities[key].body, {x: -7, y: 0})
+      }else{
+        Matter.Body.translate(entities[key].body, {x: -9, y: 0})
+      }
 
         if(entities[key].body.position.x <= -1 * (Constants.OBSTACLE_WIDTH / 2)){
           let obstacleIndex = parseInt(key.replace("obstacle", ""));
@@ -88,6 +107,8 @@ const physics = (entities, {dispatch, time }) =>{
         }
     }
   })
+
+  thick += 1
 
   return entities;
 }

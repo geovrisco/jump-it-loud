@@ -1,5 +1,7 @@
 import React,{Component} from 'react'
-import { View } from 'react-native'
+import { View, Image } from 'react-native'
+import Fox from '../assets/foxchara.gif'
+import Images from '../assets/index'
 
 export default class Character extends Component{
 
@@ -9,18 +11,20 @@ export default class Character extends Component{
     const x = this.props.body.position.x - width / 2;
     const y = this.props.body.position.y - height /2 ;
 
+    let image = Images['fox' + this.props.pose]
     return (
-      <View style={
+      <Image style={
         {
           position:'absolute',
           top: y,
           left: x,
           width:width,
           height:height,
-          backgroundColor:this.props.color
-          }}>
-
-      </View>
+          }}
+          source={image}
+          
+          >
+      </Image>
     )
   }
 
