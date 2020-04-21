@@ -3,11 +3,37 @@ import {Text, TextInput, KeyboardAvoidingView, View,StyleSheet, Button, Touchabl
 import constants from '../gameSettings/constants'
 import ButtonRestart from '../assets/btn-restart.png'
 import ButtonHome from '../assets/btn-home.png'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export default class GameOver extends Component {
   constructor(props){
     super(props)
+    this.state={
+      localScore:0
+    }
+    this.getLocalScore = this.getLocalScore.bind(this)
   }
+
+  getLocalScore = async () => {
+    try {
+      console.log('localStore')
+      const value = await AsyncStorage.getItem('localHigschore')
+      if(value !== null) {
+        // value previously stored
+        this.setState({
+          localScore:Number(value)
+        })
+      }
+    } catch(e) {
+      // error reading value
+      console.log('error gameover' , e)
+    }
+  }
+
+  componentDidMount(){
+    this.getLocalScore()
+  }
+
 
   render(){
     return(
@@ -16,6 +42,8 @@ export default class GameOver extends Component {
             <View style={{alignItems:"center"}}>
               <Text style={styles.textCat}>Score</Text>
               <Text style={styles.score}>{this.props.score}</Text>
+              <Text style={styles.textCat}>Your Best</Text>
+              <Text style={styles.score}>{this.state.localScore}</Text>
             </View>
           </View>
         
@@ -55,12 +83,12 @@ const styles = StyleSheet.create({
     color:"#df7126",
   },
   info:{
-    width:100,
-    height:120,
+    width:150,
+    height:170,
     backgroundColor:"rgba(255,255,255,0.5)",
     justifyContent:"center",
     alignItems:"center",
-    marginBottom:20,
+    marginBottom:30,
     borderColor:"black",
     borderBottomWidth:4,
     borderLeftWidth:4,
