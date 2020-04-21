@@ -29,7 +29,8 @@ export default class App extends Component {
       gamePlayed: false,
       isPause:false,
       gameDone:false,
-      pauseShow:false
+      pauseShow:false,
+      powerUp: false
     }
     this.startGame=this.startGame.bind(this)
     this.restartGame= this.restartGame.bind(this)
@@ -176,7 +177,7 @@ export default class App extends Component {
         <View style={styles.backgroundScore} >
           <Text style={styles.score}>{this.state.score}</Text>
           <View style={{position:"absolute", top:30,left:30,bottom:0,right:0,flex:1,flexDirection:'row', justifyContent:'space-between'}}>
-          <TouchableOpacity  onPress={()=>this.pause()}>
+          <TouchableOpacity  onPress={()=>this.pause()} style={{height: 30,top: 20}}>
             <Image source={PauseButton} style={styles.pauseBtn} />
           </TouchableOpacity>
           
@@ -253,8 +254,6 @@ const styles = StyleSheet.create({
   pauseBtn:{
     width:30,
     height:30,
-    marginRight:20,
-    top:20
   },
   scoreText:{
     fontSize:30
