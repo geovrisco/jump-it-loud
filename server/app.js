@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const mongo = require('./config/mongo')
 
@@ -11,9 +12,9 @@ mongo.connect(function(err){
 
         app.use('/leaderboard', require('./routers'))
 
-        // app.listen(port, () => {
-        //     console.log('running on port: ',port)
-        // })
+        app.listen(port, () => {
+            console.log('running on port: ',port)
+        })
     }
 })
 

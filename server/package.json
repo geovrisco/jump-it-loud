@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --runInBand --forceExit"
+    "test": "jest --detectOpenHandles --runInBand --forceExit",
+    "start":"node app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jest": "^25.3.0",
     "mongodb": "^3.5.6",
