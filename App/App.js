@@ -13,6 +13,9 @@ import Floor from './components/floor'
 import Background from './assets/background.png'
 import HomeDiv from './pages/home'
 import GameOver from './pages/gameOver'
+import PauseButton from './assets/pause.png'
+import HomeButton from './assets/btn-home2.png'
+import ContinueButton from './assets/btn-continue.png'
 
 
 export default class App extends Component {
@@ -23,7 +26,10 @@ export default class App extends Component {
     this.state = {
       isRunning:false,
       score:0,
-      gamePlayed: false
+      gamePlayed: false,
+      isPause:false,
+      gameDone:false,
+      pauseShow:false
     }
     this.startGame=this.startGame.bind(this)
     this.restartGame= this.restartGame.bind(this)
@@ -42,7 +48,7 @@ export default class App extends Component {
 
   
   setupWorld = () =>{
-    // console.log(Matter)
+
 
     let engine = Matter.Engine.create({ enableSleeping:false})
     let world = engine.world;
@@ -72,7 +78,6 @@ export default class App extends Component {
       physics: {engine, world, RNSoundLevel},
       character: {body:character, size:[50,50], color:"blue", renderer: Character},
       floor: {body:floor, size:[Constants.MAX_WIDTH,50], color:"red", renderer: Floor},
-
     }
 
 
@@ -84,7 +89,8 @@ export default class App extends Component {
     
     this.setState({
       isRunning:true,
-      score:0
+      score:0,
+      gameDone:false
     })
     resetObstacles()
     this.gameEngine.swap(this.setupWorld())
@@ -96,7 +102,7 @@ export default class App extends Component {
 
   componentDidMount(){
     // RNSoundLevel.stop()
-    RNSoundLevel.start()
+    // RNSoundLevel.start()
     this.getPermission()
     console.log('mulai=============================')
     // this.setState({
@@ -114,7 +120,8 @@ export default class App extends Component {
   renderHome(){
     this.setState({
       gamePlayed:false,
-      score:0
+      score:0,
+      isPause:false
     })
     resetObstacles()
     this.gameEngine.swap(this.setupWorld())
@@ -122,8 +129,6 @@ export default class App extends Component {
 
   onEvent = (e) =>{
     // console.log(e)
-    
-
     if(e.type==='score'){
       this.setState({
         score:this.state.score+1
@@ -131,14 +136,27 @@ export default class App extends Component {
       // console.log(this.state.score)
     }
     if(e.type==='gameOver'){
-      console.log('gameOver')
-      this.setState({
-        isRunning:false
+      console.log('gameOver',this.state.isPause,this.state.gameDone)
+      this.setState({ 
+        isRunning:false,
+        gameDone:true,
+        // gamePlayed: false  
       })
       RNSoundLevel.stop()
     }
-
+ 
   }
+
+  pause(){
+    if(this.state.gameDone)
+      return;
+
+    console.log('Pause clicked',this.state.isPause,this.state.gameDone)
+    this.setState({
+      isPause:!this.state.isPause,
+      isRunning:!this.state.isRunning
+    })
+  } 
 
   render(){
     return(
@@ -152,10 +170,18 @@ export default class App extends Component {
           entities= {this.entities}
           running={this.state.isRunning}
           onEvent={this.onEvent}
+
         />
         {  this.state.isRunning &&
         <View style={styles.backgroundScore} >
           <Text style={styles.score}>{this.state.score}</Text>
+          <View style={{position:"absolute", top:30,left:30,bottom:0,right:0,flex:1,flexDirection:'row', justifyContent:'space-between'}}>
+          <TouchableOpacity  onPress={()=>this.pause()}>
+            <Image source={PauseButton} style={styles.pauseBtn} />
+          </TouchableOpacity>
+          
+        </View>
+
         </View>
 
         }
@@ -166,8 +192,24 @@ export default class App extends Component {
         
         }
         {
-          !this.state.isRunning && this.state.gamePlayed && 
+          !this.state.isRunning && this.state.gamePlayed && !this.state.isPause &&
             <GameOver score={this.state.score} restartGame={this.restartGame} renderHome={this.renderHome}></GameOver>
+        }
+        { 
+           (this.state.isPause) &&
+          <View style={styles.pauseScreen}>
+            <View style={styles.pauseScreenContent}>
+              {/* <Button title="continue" onPress={()=>this.pause()}/> */}
+              <TouchableOpacity onPress={()=>this.pause()}>
+                <Image source={ContinueButton} resizeMode="stretch" style={styles.customButton}></Image>
+              </TouchableOpacity>
+              <View style={{height:10}}/>
+              <TouchableOpacity onPress={() => this.renderHome()}>
+                <Image source={HomeButton} resizeMode="stretch" style={styles.customButton}></Image>
+              </TouchableOpacity>
+              {/* <Button title="Back To Menu" color="red"/> */}
+            </View>
+          </View>
         }
       </KeyboardAvoidingView>
     )
@@ -207,5 +249,37 @@ const styles = StyleSheet.create({
     right:0,
     // justifyContent:"center",
     alignItems:"center"
+  },
+  pauseBtn:{
+    width:30,
+    height:30,
+    marginRight:20,
+    top:20
+  },
+  scoreText:{
+    fontSize:30
+  },
+  pauseScreen:{
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0, 
+    right: 0,
+    flex: 1,
+  },
+  pauseScreenContent:{
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'black',
+    opacity: 0.8,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  customButton:{
+    width:120,
+    height:45
   }
 });
