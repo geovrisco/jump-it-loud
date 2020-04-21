@@ -83,7 +83,6 @@ const physics = (entities, {dispatch, time }) =>{
 
 
   if(!generate){
-    //obstacleGenerator(Constants.MAX_WIDTH + 25  - 100, world, entities)
    obstacleGenerator(Constants.MAX_WIDTH * 1.5 - 100, world, entities)
     
   }

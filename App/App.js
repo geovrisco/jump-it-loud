@@ -12,6 +12,7 @@ import Physics, {
 import Floor from './components/floor'
 import Background from './assets/background.png'
 import HomeDiv from './pages/home'
+import GameOver from './pages/gameOver'
 
 
 export default class App extends Component {
@@ -25,6 +26,8 @@ export default class App extends Component {
       gamePlayed: false
     }
     this.startGame=this.startGame.bind(this)
+    this.restartGame= this.restartGame.bind(this)
+    this.renderHome = this.renderHome.bind(this)
   }
 
   async getPermission(){
@@ -67,7 +70,7 @@ export default class App extends Component {
 
     return{
       physics: {engine, world, RNSoundLevel},
-      character: {body:character, size:[50,50], pose:1, renderer: Character},
+      character: {body:character, size:[50,50], color:"blue", renderer: Character},
       floor: {body:floor, size:[Constants.MAX_WIDTH,50], color:"red", renderer: Floor},
 
     }
@@ -76,6 +79,7 @@ export default class App extends Component {
   }
 
   restartGame(){
+    console.log('panggil')
     RNSoundLevel.start()
     
     this.setState({
@@ -104,6 +108,16 @@ export default class App extends Component {
       isRunning: true,
       gamePlayed: true,
     })
+    RNSoundLevel.start()
+  }
+
+  renderHome(){
+    this.setState({
+      gamePlayed:false,
+      score:0
+    })
+    resetObstacles()
+    this.gameEngine.swap(this.setupWorld())
   }
 
   onEvent = (e) =>{
@@ -139,20 +153,21 @@ export default class App extends Component {
           running={this.state.isRunning}
           onEvent={this.onEvent}
         />
-        <View style={{position:"absolute", top:30,left:30,bottom:0,right:0,flex:1}}>
-        <Text>{this.state.score}</Text>
+        {  this.state.isRunning &&
+        <View style={styles.backgroundScore} >
+          <Text style={styles.score}>{this.state.score}</Text>
         </View>
+
+        }
         {
           !this.state.isRunning && !this.state.gamePlayed &&
-          <View style={styles.container}>
+          
             <HomeDiv startGame={this.startGame}></HomeDiv>
-          </View>
+        
         }
         {
           !this.state.isRunning && this.state.gamePlayed && 
-          <View style={styles.container}>
-          <Button style={{width:100}} onPress={()=> this.restartGame()} title="restart"></Button>
-          </View>
+            <GameOver score={this.state.score} restartGame={this.restartGame} renderHome={this.renderHome}></GameOver>
         }
       </KeyboardAvoidingView>
     )
@@ -162,6 +177,7 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent:"center"
   },
   background:{
     position:"absolute",
@@ -175,4 +191,21 @@ const styles = StyleSheet.create({
   container2: {
     position:"absolute",
   },
+  score:{
+    fontFamily:"pixelboy",
+    fontSize:45,
+    color:"#ffffff",
+    top:Constants.MAX_HEIGHT/5
+  },
+  backgroundScore:{
+    position:"absolute",
+    width:Constants.MAX_WIDTH,
+    height:Constants.MAX_HEIGHT,
+    top:0,
+    bottom:0,
+    left:0,
+    right:0,
+    // justifyContent:"center",
+    alignItems:"center"
+  }
 });
