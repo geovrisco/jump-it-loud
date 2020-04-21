@@ -17,6 +17,8 @@ import PauseButton from './assets/pause.png'
 import HomeButton from './assets/btn-home2.png'
 import ContinueButton from './assets/btn-continue.png'
 
+import LeaderBoard from './pages/leaderboard'
+
 
 export default class App extends Component {
   constructor(props){
@@ -42,7 +44,7 @@ export default class App extends Component {
       alert('This Wonderful application need audio recording permission to run on your phone')
     }else {
       console.log('sukses')
-      
+      RNSoundLevel.start()
     }
   }
 
@@ -110,6 +112,7 @@ export default class App extends Component {
     // })
     }
   startGame(){
+    console.log('masukkkkk')
     this.setState({
       isRunning: true,
       gamePlayed: true,
@@ -188,7 +191,8 @@ export default class App extends Component {
         {
           !this.state.isRunning && !this.state.gamePlayed &&
           
-            <HomeDiv startGame={this.startGame}></HomeDiv>
+            // <HomeDiv startGame={this.startGame}></HomeDiv>
+            <LeaderBoard></LeaderBoard>
         
         }
         {
