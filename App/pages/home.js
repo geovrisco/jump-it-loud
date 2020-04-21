@@ -6,24 +6,41 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Platform
+  Platform,
+  Image
 } from 'react-native'
+// import Sound from 'react-native-sound'
 import constants from '../gameSettings/constants';
+import logo from '../assets/logo.png'
+import bgm from '../assets/bgm.mp3'
+import SoundPlayer from 'react-native-sound-player'
 
 
+const size60 = Math.round( constants.MAX_WIDTH * 0.8)
 
 export default class HomePage extends Component{
   constructor(props){
     super(props)
   }
+
+  componentDidMount(){
+    console.log('===didmountHome==')
+
+  }
+
   render(){
     return (
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <Text>UserName</Text>
-        <TextInput style={styles.texInput}></TextInput>
-        <TouchableOpacity style={styles.buttonPlay} onPress={() => this.props.startGame()}>
-          <Text>Play</Text>
-        </TouchableOpacity>
+        <View style={{alignItems:"center", width:size60}}>
+          <Image
+            source={logo}
+            style={{width:250,height:250}}
+          />
+          <Text style={styles.Text}>Speak Louder To Make Character Jump Higher</Text>
+          <TouchableOpacity style={styles.buttonPlay} onPress={() => this.props.startGame()}>
+            <Text>Play</Text>
+          </TouchableOpacity>
+        </View>
       </KeyboardAvoidingView>
     )
   }
@@ -32,10 +49,15 @@ export default class HomePage extends Component{
 
 const styles = StyleSheet.create({
   container: {
-    display:'flex',
-    flexDirection:'column',
+    position:"absolute",
+    top:0,
+    left:0,
+    right:0,
+    bottom:0,
+    width:constants.MAX_WIDTH,
+    height:constants.MAX_HEIGHT,
     alignItems:'center',
-    justifyContent:'center'
+    justifyContent:"center"
   },
   texInput:{
     width:300,
@@ -48,6 +70,12 @@ const styles = StyleSheet.create({
     height: 30,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  Text:{
+    fontFamily:"pixelboy",
+    fontSize:20,
+    textAlign:"center",
+    lineHeight:20
   }
   
 });
