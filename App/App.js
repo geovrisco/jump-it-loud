@@ -5,6 +5,7 @@ import Constants from './gameSettings/constants'
 import {GameEngine} from 'react-native-game-engine'
 import Matter from 'matter-js'
 import * as Permissions from 'expo-permissions'
+import AsyncStorage from '@react-native-community/async-storage'
 import Character from './components/character'
 import Physics, {
   resetObstacles
@@ -30,11 +31,14 @@ export default class App extends Component {
       isPause:false,
       gameDone:false,
       pauseShow:false,
-      powerUp: false
+      powerUp: false,
+      localScore:0
     }
     this.startGame=this.startGame.bind(this)
     this.restartGame= this.restartGame.bind(this)
     this.renderHome = this.renderHome.bind(this)
+    this.setLocalScore = this.setLocalScore.bind(this)
+    this.getLocalScore = this.getLocalScore.bind(this)
   }
 
   async getPermission(){
@@ -43,7 +47,6 @@ export default class App extends Component {
       alert('This Wonderful application need audio recording permission to run on your phone')
     }else {
       console.log('sukses')
-      
     }
   }
 
@@ -84,6 +87,10 @@ export default class App extends Component {
 
   }
 
+  
+
+  
+
   restartGame(){
     console.log('panggil')
     RNSoundLevel.start()
@@ -97,6 +104,35 @@ export default class App extends Component {
     this.gameEngine.swap(this.setupWorld())
   }
 
+  getLocalScore = async () => {
+    try {
+      console.log('localStore')
+      const value = await AsyncStorage.getItem('localHigschore')
+      if(value !== null) {
+        // value previously stored
+        this.setState({
+          localScore:Number(value)
+        })
+      }
+    } catch(e) {
+      // error reading value
+      console.log('erro get local app',e)
+    }
+  }
+
+  setLocalScore = async () => {
+    if(this.state.score > this.state.localScore){
+      try {
+        await AsyncStorage.setItem('localHigschore', `${this.state.score+1}`)
+        console.log('sukses', this.state.localScore)
+  
+      } catch (e) {
+        // saving error
+        console.log('error set local App', e)
+      }
+    }
+  }
+
   componentWillUnmount(){
     RNSoundLevel.stop()
   }
@@ -106,9 +142,16 @@ export default class App extends Component {
     // RNSoundLevel.start()
     this.getPermission()
     console.log('mulai=============================')
+    this.getLocalScore()
     // this.setState({
     //   isRunning:true
     // })
+    
+
+    
+    
+    
+
     }
   startGame(){
     this.setState({
@@ -138,6 +181,7 @@ export default class App extends Component {
     }
     if(e.type==='gameOver'){
       console.log('gameOver',this.state.isPause,this.state.gameDone)
+      this.setLocalScore()
       this.setState({ 
         isRunning:false,
         gameDone:true,
