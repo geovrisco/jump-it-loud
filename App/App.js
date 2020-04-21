@@ -13,6 +13,8 @@ import Floor from './components/floor'
 import Background from './assets/background.png'
 import HomeDiv from './pages/home'
 import PauseButton from './assets/pause.png'
+import HomeButton from './assets/btn-home2.png'
+import ContinueButton from './assets/btn-continue.png'
 
 
 export default class App extends Component {
@@ -43,7 +45,7 @@ export default class App extends Component {
 
   
   setupWorld = () =>{
-    // console.log(Matter)
+
 
     let engine = Matter.Engine.create({ enableSleeping:false})
     let world = engine.world;
@@ -157,7 +159,7 @@ export default class App extends Component {
         <View style={{position:"absolute", top:30,left:30,bottom:0,right:0,flex:1,flexDirection:'row', justifyContent:'space-between'}}>
           <Text style={styles.scoreText}>{this.state.score}</Text>
           {
-            (!this.state.isPause) &&  
+            (!this.state.isPause && this.state.isRunning) &&  
           <TouchableOpacity  onPress={()=>this.pause()}>
             <Image source={PauseButton} style={styles.pauseBtn} />
           </TouchableOpacity>
@@ -180,9 +182,15 @@ export default class App extends Component {
            (this.state.isPause) &&
           <View style={styles.pauseScreen}>
             <View style={styles.pauseScreenContent}>
-              <Button title="continue" onPress={()=>this.pause()}/>
+              {/* <Button title="continue" onPress={()=>this.pause()}/> */}
+              <TouchableOpacity onPress={()=>this.pause()}>
+                <Image source={ContinueButton} resizeMode="stretch" style={styles.customButton}></Image>
+              </TouchableOpacity>
               <View style={{height:10}}/>
-              <Button title="Back To Menu" color="red"/>
+              <TouchableOpacity>
+                <Image source={HomeButton} resizeMode="stretch" style={styles.customButton}></Image>
+              </TouchableOpacity>
+              {/* <Button title="Back To Menu" color="red"/> */}
             </View>
           </View>
         }
@@ -208,9 +216,10 @@ const styles = StyleSheet.create({
     position:"absolute",
   },
   pauseBtn:{
-    width:50,
-    height:50,
-    marginRight:20
+    width:30,
+    height:30,
+    marginRight:20,
+    top:20
   },
   scoreText:{
     fontSize:30
@@ -233,5 +242,9 @@ const styles = StyleSheet.create({
     opacity: 0.8,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  customButton:{
+    width:120,
+    height:45
   }
 });
