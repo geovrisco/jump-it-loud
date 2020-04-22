@@ -14,6 +14,7 @@ import constants from '../gameSettings/constants';
 import logo from '../assets/logo.png'
 import bgm from '../assets/bgm.mp3'
 import SoundPlayer from 'react-native-sound-player'
+import LeaderBoard from '../pages/leaderboard'
 
 
 const size60 = Math.round( constants.MAX_WIDTH * 0.8)
@@ -21,7 +22,10 @@ const size60 = Math.round( constants.MAX_WIDTH * 0.8)
 export default class HomePage extends Component{
   constructor(props){
     super(props)
+
   }
+
+  
 
   componentDidMount(){
     console.log('===didmountHome==')
@@ -52,6 +56,9 @@ export default class HomePage extends Component{
           <Text style={styles.Text}>Speak Louder To Make Character Jump Higher</Text>
           <TouchableOpacity style={styles.buttonPlay} onPress={() => this.props.startGame()}>
             <Text>Play</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonPlay} onPress={() => this.props.toggleLeaderBoard()}>
+            <Text>Leader Board</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

@@ -17,6 +17,7 @@ import GameOver from './pages/gameOver'
 import PauseButton from './assets/pause.png'
 import HomeButton from './assets/btn-home2.png'
 import ContinueButton from './assets/btn-continue.png'
+import LeaderBoard from './pages/leaderboard'
 
 
 export default class App extends Component {
@@ -32,13 +33,15 @@ export default class App extends Component {
       gameDone:false,
       pauseShow:false,
       powerUp: false,
-      localScore:0
+      localScore:0,
+      leaderBoard:false
     }
     this.startGame=this.startGame.bind(this)
     this.restartGame= this.restartGame.bind(this)
     this.renderHome = this.renderHome.bind(this)
     this.setLocalScore = this.setLocalScore.bind(this)
     this.getLocalScore = this.getLocalScore.bind(this)
+    this.toggleLeaderBoard = this.toggleLeaderBoard.bind(this)
   }
 
   async getPermission(){
@@ -47,6 +50,7 @@ export default class App extends Component {
       alert('This Wonderful application need audio recording permission to run on your phone')
     }else {
       console.log('sukses')
+      RNSoundLevel.start()
     }
   }
 
@@ -153,7 +157,15 @@ export default class App extends Component {
     
 
     }
+
+  toggleLeaderBoard(){
+    this.setState({
+      leaderBoard:!this.state.leaderBoard
+    })
+    console.log(this.state.leaderBoard,'ea')
+  }
   startGame(){
+    console.log('masukkkkk')
     this.setState({
       isRunning: true,
       gamePlayed: true,
@@ -231,17 +243,19 @@ export default class App extends Component {
 
         }
         {
-          !this.state.isRunning && !this.state.gamePlayed &&
-          
-            <HomeDiv startGame={this.startGame}></HomeDiv>
-        
+          !this.state.isRunning && !this.state.gamePlayed && !this.state.leaderBoard &&
+            <HomeDiv startGame={this.startGame} toggleLeaderBoard={this.toggleLeaderBoard}></HomeDiv>
+        }
+        {
+          !this.state.isRunning && !this.state.gamePlayed && this.state.leaderBoard &&
+            <LeaderBoard toggleLeaderBoard={this.toggleLeaderBoard}></LeaderBoard>
         }
         {
           !this.state.isRunning && this.state.gamePlayed && !this.state.isPause &&
             <GameOver score={this.state.score} restartGame={this.restartGame} renderHome={this.renderHome}></GameOver>
         }
         { 
-           (this.state.isPause) &&
+          (this.state.isPause) &&
           <View style={styles.pauseScreen}>
             <View style={styles.pauseScreenContent}>
               {/* <Button title="continue" onPress={()=>this.pause()}/> */}
