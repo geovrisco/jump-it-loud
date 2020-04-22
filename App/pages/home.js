@@ -30,15 +30,10 @@ export default class HomePage extends Component{
   
 
   componentDidMount(){
-    console.log('===didmountHome==')
     try {
-      // play the file tone.mp3
-      console.log('masuk')
       SoundPlayer.playSoundFile('bgm', 'mp3')
-      // or play from url
-      // SoundPlayer.playUrl('https://example.com/music.mp3')
   } catch (e) {
-      console.log(`cannot play the sound file`, e)
+
   }
 
   }

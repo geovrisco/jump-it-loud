@@ -78,7 +78,7 @@ export default class GameOver extends Component {
         }
         {
           this.state.submitHigscore &&
-          <SubmitLeaderBoard localScore={this.props.score} toggleSubmitHighscore={this.toggleSubmitHighscore} renderHome={this.props.renderHome}></SubmitLeaderBoard>
+          <SubmitLeaderBoard localScore={this.props.score} toggleSubmitHighscore={this.toggleSubmitHighscore} renderHome={this.props.rendeH}></SubmitLeaderBoard>
         }
       </KeyboardAvoidingView>
     )

@@ -21,7 +21,6 @@ export default class Floor extends Component{
           left: x,
           width:width,
           height:height,
-          backgroundColor:this.props.color,
           overflow: 'hidden',
           flexDirection: 'row'
           }}>

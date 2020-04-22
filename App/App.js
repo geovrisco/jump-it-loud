@@ -85,7 +85,7 @@ export default class App extends Component {
     return{
       physics: {engine, world, RNSoundLevel},
       character: {body:character, size:[50,50], color:"blue", renderer: Character},
-      floor: {body:floor, size:[Constants.MAX_WIDTH,50], color:"red", renderer: Floor},
+      floor: {body:floor, size:[Constants.MAX_WIDTH,50], renderer: Floor},
     }
 
 

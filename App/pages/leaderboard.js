@@ -7,17 +7,17 @@ import ButtonHome from '../assets/btn-home2.png'
 
 const leaderboard = (props) => {
     const [board, setBoard] = useState([])
-    console.log(props)
+    
     const getBoard = async () => {
         try{
-            console.log('asdasd')
+            
             let result = await axios.get('http://ec2-3-0-96-195.ap-southeast-1.compute.amazonaws.com:3001/leaderboard')
             
             result.data.leaderBoard.sort((a, b)=> b.score - a.score)
-            console.log(result.data.leaderBoard)
+            
             setBoard(result.data.leaderBoard)
         }catch(err){
-            console.log('error fetch',err)
+            
         }
     }
 
@@ -35,7 +35,7 @@ const leaderboard = (props) => {
                   <Text style={styles.number}>{`${index+1}`}</Text>
                   <Text style={styles.name}>{data.name}</Text>
                   <Text style={styles.score}>{`${data.score}`}</Text>
-                </View>) : <View></View> )
+                </View>) : <View key={index}></View> )
               }
             </View>
           </ImageBackground>

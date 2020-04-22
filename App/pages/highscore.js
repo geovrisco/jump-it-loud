@@ -6,13 +6,11 @@ import ButtonSubmit from '../assets/btn-submit.png'
 import ButtonCancel from '../assets/btn-cancel.png'
 
 const SubmitLeaderBoard = (props) => {
-  console.log(props)
   const[score,setScore] = useState(0)
   const[name,setName]= useState('player')
 
   const onChangeTexinput = (e)=>{
     setName(e)
-    console.log(name)
   }
 
   const postHighscore = async ()=>{
@@ -21,10 +19,9 @@ const SubmitLeaderBoard = (props) => {
         name:name,
         score: Number(props.localScore)
       })
-      console.log(JSON.stringify(response,null,2))
+
       props.toggleSubmitHighscore()
     } catch (error) {
-      console.log(error)
     }
   }
   
