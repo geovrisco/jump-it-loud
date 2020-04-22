@@ -129,6 +129,9 @@ export default class App extends Component {
       try {
         await AsyncStorage.setItem('localHigschore', `${this.state.score+1}`)
         console.log('sukses', this.state.localScore)
+        this.setState({
+          localScore:this.state.score
+        })
   
       } catch (e) {
         // saving error
@@ -158,6 +161,8 @@ export default class App extends Component {
     
 
     }
+
+  
 
   toggleLeaderBoard(){
     this.setState({
@@ -195,7 +200,6 @@ export default class App extends Component {
     if(e.type==='gameOver'){
       console.log('gameOver',this.state.isPause,this.state.gameDone)
       this.setLocalScore()
-      this.getLocalScore()
       this.setState({ 
         isRunning:false,
         gameDone:true,
@@ -254,7 +258,7 @@ export default class App extends Component {
         }
         {
           !this.state.isRunning && this.state.gamePlayed && !this.state.isPause &&
-            <GameOver score={this.state.score} restartGame={this.restartGame} renderHome={this.renderHome}></GameOver>
+            <GameOver score={this.state.score}  restartGame={this.restartGame} renderHome={this.renderHome}></GameOver>
         }
         { 
           (this.state.isPause) &&
