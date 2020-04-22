@@ -35,7 +35,7 @@ const leaderboard = (props) => {
                   <Text style={styles.number}>{`${index+1}`}</Text>
                   <Text style={styles.name}>{data.name}</Text>
                   <Text style={styles.score}>{`${data.score}`}</Text>
-                </View>) : '' )
+                </View>) : <View></View> )
               }
             </View>
           </ImageBackground>

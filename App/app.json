@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "App",
-    "slug": "App",
+    "name": "JumpItLoud",
+    "slug": "JumpItLoud",
     "platforms": [
       "ios",
       "android",
