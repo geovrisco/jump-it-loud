@@ -136,6 +136,7 @@ export default class App extends Component {
       }
     }
   }
+  
 
   componentWillUnmount(){
     RNSoundLevel.stop()
