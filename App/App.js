@@ -195,6 +195,7 @@ export default class App extends Component {
     if(e.type==='gameOver'){
       console.log('gameOver',this.state.isPause,this.state.gameDone)
       this.setLocalScore()
+      this.getLocalScore()
       this.setState({ 
         isRunning:false,
         gameDone:true,
