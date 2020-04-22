@@ -15,6 +15,8 @@ import logo from '../assets/logo.png'
 import bgm from '../assets/bgm.mp3'
 import SoundPlayer from 'react-native-sound-player'
 import LeaderBoard from '../pages/leaderboard'
+import PlayButton from '../assets/btn-play.png'
+import LeaderBoardButton from '../assets/btn-leaderboard.png'
 
 
 const size60 = Math.round( constants.MAX_WIDTH * 0.8)
@@ -54,11 +56,11 @@ export default class HomePage extends Component{
             style={{width:250,height:250}}
           />
           <Text style={styles.Text}>Speak Louder To Make Character Jump Higher</Text>
-          <TouchableOpacity style={styles.buttonPlay} onPress={() => this.props.startGame()}>
-            <Text>Play</Text>
+          <TouchableOpacity onPress={() => this.props.startGame()} style={{marginBottom:5, marginTop:10}}>
+            <Image source={PlayButton} style={styles.buttonPlay} resizeMode="stretch" ></Image>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonPlay} onPress={() => this.props.toggleLeaderBoard()}>
-            <Text>Leader Board</Text>
+          <TouchableOpacity  onPress={() => this.props.toggleLeaderBoard()} style={{marginTop:5}}>
+            <Image source={LeaderBoardButton} style={styles.buttonPlay} resizeMode="stretch"></Image>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -86,8 +88,8 @@ const styles = StyleSheet.create({
     backgroundColor:"#fff"
   },
   buttonPlay:{
-    width: 200,
-    height: 30,
+    width: 100,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center'
   },

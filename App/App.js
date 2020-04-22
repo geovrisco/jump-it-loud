@@ -50,7 +50,7 @@ export default class App extends Component {
       alert('This Wonderful application need audio recording permission to run on your phone')
     }else {
       console.log('sukses')
-      RNSoundLevel.start()
+      // RNSoundLevel.start()
     }
   }
 
